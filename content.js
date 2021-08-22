@@ -22,6 +22,8 @@ function setTimePlant(plant) {
 	const dateNow = new Date();
 	const formatted = dateEnds.getHours() + ':' + dateEnds.getMinutes() + ':' + dateEnds.getSeconds();
 
+	if (document.getElementById('timerList')) document.getElementById('timerList').remove();
+
 	var container = document.createElement('div');
 	var time = document.createElement('div');
 	var timeLeft = document.createElement('div');
@@ -33,6 +35,7 @@ function setTimePlant(plant) {
 	container.style.color = '#ffffff';
 	container.style.fontSize = '20px';
 	container.style.marginBottom = '1.5rem';
+	container.id = 'timerList';
 
 	title.style.fontWeight = '700';
 	title.style.marginBottom = '20px';
@@ -75,6 +78,8 @@ function setTimePlants(plants) {
 	container.style.marginBottom = '1rem';
 	container.id = 'timerList';
 
+	var elems = document.querySelectorAll('*');
+
 	plants.forEach((plant) => {
 		const waterInfo = plant.activeTools.find((tool) => tool.type === 'WATER');
 		const waterEndTime = waterInfo.endTime;
@@ -86,19 +91,25 @@ function setTimePlants(plants) {
 
 		var time = document.createElement('div');
 
-		time.innerText = plant.plantId
-			? plant.plantId
-			: plant._id +
-			  ' - ' +
-			  formatted +
-			  ' LEFT: ' +
-			  ((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2) +
-			  ' min';
+		time.innerText =
+			(plant.plantId ? plant.plantId : plant._id) +
+			' - ' +
+			formatted +
+			' LEFT: ' +
+			((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2) +
+			' min';
 
 		console.log(time);
 		if ((dateEnds.getTime() - dateNow.getTime()) / 60000 < 0) time.style.color = '#ff4444';
 
-		if (soon) container.append(time);
+		if (soon) {
+			if (plant.plantId) {
+				let elementFound = Array.from(elems).find((elem) => elem.textContent == plant.plantId);
+				elementFound.style.fontSize = '22px';
+				elementFound.style.color = '#22ff22';
+			}
+			container.append(time);
+		}
 	});
 
 	var checkExist = setInterval(function () {

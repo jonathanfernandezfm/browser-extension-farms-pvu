@@ -15,15 +15,16 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		let data = checkCache(url);
 
 		if (!data) {
-			const json = await redoRequest(details);
+			const json = await redoRequest(url, details);
 			data = json.data;
+			console.log('REQUEST', data);
 
 			if (json.status !== 0) return;
 
-			setCache(data);
+			setCache(url, data);
+		} else {
+			console.log('CACHED', data);
 		}
-
-		console.log('REQUEST', data);
 
 		sendDataToClient(data, details);
 	},
@@ -43,7 +44,7 @@ function sendDataMultiplePlants(data, details) {
 	);
 }
 
-async function redoRequest(details) {
+async function redoRequest(url, details) {
 	const headers = {};
 	details.requestHeaders.forEach((header) => {
 		headers[header.name] = header.value;
@@ -61,11 +62,11 @@ function checkCache(url) {
 	const timeNow = new Date().getTime();
 	const timeCache = cached.time;
 
-	if (timeNow - timeCache < 60000) return cached;
+	if (timeNow - timeCache < 60000) return cached.data;
 	else return;
 }
 
-function setCache(data) {
+function setCache(url, data) {
 	cache[url] = { data, time: new Date().getTime() };
 }
 
@@ -77,11 +78,11 @@ function sendDataToClient(data, details) {
 	} else if (data.activeTools) {
 		// INDIVIDUAL PLANT
 		sendDataPlant(data, details);
-		outputTime(data);
+		// outputTime(data);
 	} else {
 		// INDIVIDUAL PLANT DIFFERENT RESPONSE
 		sendDataPlant(data.plant, details);
-		outputTime(data.plant);
+		// outputTime(data.plant);
 	}
 }
 
