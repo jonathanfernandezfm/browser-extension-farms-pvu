@@ -1,0 +1,20 @@
+{
+	"name": "PvU Plant Reset Time",
+	"description": "Tracks PvU reset plant reset time",
+	"version": "1.0",
+	"manifest_version": 3,
+	"background": {
+		"service_worker": "background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://marketplace.plantvsundead.com/*"],
+			"js": ["content.js"]
+		}
+	],
+	"permissions": ["storage", "activeTab", "scripting", "webRequest", "tabs"],
+	"host_permissions": ["<all_urls>"],
+	"action": {
+		"default_popup": "popup.html"
+	}
+}
