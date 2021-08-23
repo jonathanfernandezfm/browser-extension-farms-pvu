@@ -62,7 +62,7 @@ function checkCache(url) {
 	const timeNow = new Date().getTime();
 	const timeCache = cached.time;
 
-	if (timeNow - timeCache < 60000) return cached.data;
+	if (timeNow - timeCache < 120000) return cached.data;
 	else return;
 }
 

@@ -55,7 +55,6 @@ function setTimePlant(plant) {
 			document.getElementsByClassName('xl:tw-col-span-4')[0].prepend(container);
 			clearInterval(checkExist);
 		}
-		console.log('memory leak');
 	}, 500);
 
 	setTimeout(() => {
@@ -93,7 +92,10 @@ function setTimePlants(plants) {
 
 		console.log('PLANTA: ' + (plant.plantId ? plant.plantId : plant._id));
 		console.log('RESET EN: ' + formatted);
-		console.log('RESTANTE: ' + ((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2));
+		console.log(
+			'%cRESTANTE: ' + ((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2),
+			'background: #222; color: #bada55'
+		);
 
 		time.innerText =
 			(plant.plantId ? plant.plantId : plant._id) +
