@@ -91,6 +91,10 @@ function setTimePlants(plants) {
 
 		var time = document.createElement('div');
 
+		console.log('PLANTA: ' + (plant.plantId ? plant.plantId : plant._id));
+		console.log('RESET EN: ' + formatted);
+		console.log('RESTANTE: ' + ((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2));
+
 		time.innerText =
 			(plant.plantId ? plant.plantId : plant._id) +
 			' - ' +
@@ -99,14 +103,22 @@ function setTimePlants(plants) {
 			((dateEnds.getTime() - dateNow.getTime()) / 60000).toFixed(2) +
 			' min';
 
-		console.log(time);
 		if ((dateEnds.getTime() - dateNow.getTime()) / 60000 < 0) time.style.color = '#ff4444';
 
 		if (soon) {
 			if (plant.plantId) {
-				let elementFound = Array.from(elems).find((elem) => elem.textContent == plant.plantId);
-				elementFound.style.fontSize = '22px';
-				elementFound.style.color = '#22ff22';
+				let plantExists = setInterval(function () {
+					if (Array.from(elems).find((elem) => elem.textContent == plant.plantId)) {
+						let elementFound = Array.from(elems).find((elem) => elem.textContent == plant.plantId);
+						elementFound.style.fontSize = '22px';
+						elementFound.style.color = '#22ff22';
+						clearInterval(plantExists);
+					}
+				}, 500);
+
+				setTimeout(() => {
+					clearInterval(plantExists);
+				}, 5000);
 			}
 			container.append(time);
 		}
@@ -118,7 +130,6 @@ function setTimePlants(plants) {
 			document.getElementsByClassName(classes)[0].prepend(container);
 			clearInterval(checkExist);
 		}
-		console.log('memory leak');
 	}, 500);
 
 	setTimeout(() => {
