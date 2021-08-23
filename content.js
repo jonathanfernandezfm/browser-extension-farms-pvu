@@ -22,7 +22,7 @@ function setTimePlant(plant) {
 	const dateNow = new Date();
 	const formatted = dateEnds.getHours() + ':' + dateEnds.getMinutes() + ':' + dateEnds.getSeconds();
 
-	if (document.getElementById('timerList')) document.getElementById('timerList').remove();
+	while (document.getElementById('timerList')) document.getElementById('timerList').remove();
 
 	var container = document.createElement('div');
 	var time = document.createElement('div');
@@ -67,7 +67,7 @@ function setTimePlants(plants) {
 		'tw-mt-0 sm:tw-mt-0 sm:tw-p-4 tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-1 lg:tw-grid-cols-2 xl:tw-grid-cols-3 tw-gap-3';
 	let container = document.createElement('div');
 
-	if (document.getElementById('timerList')) document.getElementById('timerList').remove();
+	while (document.getElementById('timerList')) document.getElementById('timerList').remove();
 
 	container.style.backgroundColor = 'rgba(26,29,40,.8)';
 	container.style.borderRadius = '24px';
