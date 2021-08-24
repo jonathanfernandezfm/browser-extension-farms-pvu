@@ -2,6 +2,7 @@ let cache = {};
 
 const urlToPlant = 'https://marketplace.plantvsundead.com/#/farm/';
 const urlToServer = 'https://pvu-plants-tracker.herokuapp.com/add-plant';
+const urlToServerPlants = 'https://pvu-plants-tracker.herokuapp.com/add-plants';
 // const urlToServer = 'http://localhost:4000/add-plant';
 
 var filter = { urls: ['https://backend-farm.plantvsundead.com/farms/*'] };
@@ -77,20 +78,36 @@ function sendDataToClient(data, details) {
 	if (data.length) {
 		// ARRAY OF PLANTS
 		sendDataMultiplePlants(data, details);
-		requestsDone = {};
 	} else if (data.activeTools) {
 		// INDIVIDUAL PLANT
 		sendDataPlant(data, details);
-		// outputTime(data);
 	} else {
 		// INDIVIDUAL PLANT DIFFERENT RESPONSE
 		sendDataPlant(data.plant, details);
-		// outputTime(data.plant);
 	}
 }
 
 function saveDatabase(data) {
 	if (data.length) {
+		const body = data.map((plant) => {
+			const waterInfo = plant.activeTools.find((tool) => tool.type === 'WATER');
+
+			return {
+				url: urlToPlant + plant._id,
+				id: plant.id,
+				id_plant: plant._id,
+				time: waterInfo.endTime,
+				coordinate_x: plant.land.x,
+				coordinate_y: plant.land.y,
+				image: plant.plant.iconUrl,
+			};
+		});
+
+		fetch(urlToServerPlants, { method: 'POST', body: JSON.stringify(body) })
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => console.log(err));
 	} else if (data.activeTools) {
 		const waterInfo = data.activeTools.find((tool) => tool.type === 'WATER');
 
@@ -99,9 +116,9 @@ function saveDatabase(data) {
 			id: data.id,
 			id_plant: data._id,
 			time: waterInfo.endTime,
-			coordinate_x: '0',
-			coordinate_y: '0',
-			image: '123',
+			coordinate_x: data.land.x,
+			coordinate_y: data.land.y,
+			image: data.plant.iconUrl,
 		};
 
 		console.log(body);
@@ -119,9 +136,9 @@ function saveDatabase(data) {
 			id: data.plant.id,
 			id_plant: data.plant._id,
 			time: waterInfo.endTime,
-			coordinate_x: '0',
-			coordinate_y: '0',
-			image: '123',
+			coordinate_x: data.plant.land.x,
+			coordinate_y: data.data.plant.land.y,
+			image: data.plant.plant.iconUrl,
 		};
 
 		fetch(urlToServer, { method: 'POST', body: JSON.stringify(body) })
