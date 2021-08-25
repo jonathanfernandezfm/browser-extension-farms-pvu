@@ -100,6 +100,7 @@ function saveDatabase(data) {
 				coordinate_x: plant.land.x,
 				coordinate_y: plant.land.y,
 				image: plant.plant.iconUrl,
+				water: waterInfo.count,
 			};
 		});
 
