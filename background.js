@@ -10,7 +10,7 @@ var opt_extraInfoSpec = ['requestHeaders'];
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
 	async (details) => {
-		console.log('SNIFF', details);
+		console.log('SNIFF -> ', details);
 
 		const url = details.url;
 		if (details.initiator !== 'https://marketplace.plantvsundead.com') return;
@@ -20,14 +20,14 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 		if (!data) {
 			const json = await redoRequest(url, details);
 			data = json.data;
-			console.log('REQUEST', data);
+			console.log('REQUEST -> ', data);
 
 			if (json.status !== 0) return;
 
 			saveDatabase(data);
 			setCache(url, data);
 		} else {
-			console.log('CACHED', data);
+			console.log('CACHED -> ', data);
 		}
 
 		sendDataToClient(data, details);
@@ -101,12 +101,17 @@ function saveDatabase(data) {
 				coordinate_y: plant.land.y,
 				image: plant.plant.iconUrl,
 				water: waterInfo.count,
+				owner: plant.ownerId,
+				harvest_time: plant.harvestTime,
+				temporal: plant.isTempPlant,
+				hasSeed: plant.hasSeed,
+				hasCrow: plant.hasCrow,
 			};
 		});
 
 		fetch(urlToServerPlants, { method: 'POST', body: JSON.stringify(body) })
 			.then((res) => {
-				console.log(res);
+				console.log('RESPONSE SAVED -> ', res);
 			})
 			.catch((err) => console.log(err));
 	} else if (data.activeTools) {
@@ -120,13 +125,18 @@ function saveDatabase(data) {
 			coordinate_x: data.land.x,
 			coordinate_y: data.land.y,
 			image: data.plant.iconUrl,
+			owner: data.ownerId,
+			harvest_time: data.harvestTime,
+			temporal: data.isTempPlant,
+			hasSeed: data.hasSeed,
+			hasCrow: data.hasCrow,
 		};
 
 		console.log(body);
 
 		fetch(urlToServer, { method: 'POST', body: JSON.stringify(body) })
 			.then((res) => {
-				console.log(res);
+				console.log('RESPONSE SAVED -> ', res);
 			})
 			.catch((err) => console.log(err));
 	} else {
@@ -140,11 +150,16 @@ function saveDatabase(data) {
 			coordinate_x: data.plant.land.x,
 			coordinate_y: data.data.plant.land.y,
 			image: data.plant.plant.iconUrl,
+			owner: data.plant.ownerId,
+			harvest_time: data.plant.harvestTime,
+			temporal: data.plant.isTempPlant,
+			hasSeed: data.plant.hasSeed,
+			hasCrow: data.plant.hasCrow,
 		};
 
 		fetch(urlToServer, { method: 'POST', body: JSON.stringify(body) })
 			.then((res) => {
-				console.log(res);
+				console.log('RESPONSE SAVED -> ', res);
 			})
 			.catch((err) => console.log(err));
 	}
