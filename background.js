@@ -5,7 +5,7 @@ const urlToServer = 'https://pvu-plants-tracker.herokuapp.com/add-plant';
 const urlToServerPlants = 'https://pvu-plants-tracker.herokuapp.com/add-plants';
 // const urlToServer = 'http://localhost:4000/add-plant';
 
-var filter = { urls: ['https://backend-farm.plantvsundead.com/farms/*'] };
+var filter = { urls: ['https://backend-farm-stg.plantvsundead.com/farms/*'] };
 var opt_extraInfoSpec = ['requestHeaders'];
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
